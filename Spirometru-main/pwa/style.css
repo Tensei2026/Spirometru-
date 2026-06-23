@@ -1,0 +1,557 @@
+/* ═══════════════════════════════════════════════════════════════
+   SPIROMETRU PWA — Style
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg:        #0a0a14;
+  --card:      #12121f;
+  --card2:     #1a1a2e;
+  --border:    #222236;
+  --text:      #e8e8f0;
+  --text-muted:#6666aa;
+  --text-dim:  #3a3a5a;
+  --pef:       #ff9500;
+  --fev1:      #00c8ff;
+  --green:     #00e676;
+  --yellow:    #ffcc00;
+  --red:       #ff4444;
+  --accent:    #4488ff;
+  --radius:    14px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  overscroll-behavior: none;
+}
+
+/* ── Ecrane ──────────────────────────────────────────────────── */
+.screen {
+  display: none;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+.screen.active { display: flex; }
+
+/* ── Header ──────────────────────────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  padding-top: max(14px, env(safe-area-inset-top));
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+/* ── Buton conectare ─────────────────────────────────────────── */
+.btn-connect {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-connect.connected {
+  border-color: var(--green);
+  color: var(--green);
+}
+.btn-connect.scanning {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#connect-icon {
+  font-size: 8px;
+}
+
+/* ── Search bar ──────────────────────────────────────────────── */
+.search-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+.search-bar input {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+.search-bar input::placeholder { color: var(--text-dim); }
+.search-bar input:focus { border-color: var(--accent); }
+
+/* ── Lista pacienti ──────────────────────────────────────────── */
+.patient-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+}
+.patient-item {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.patient-item:active { border-color: var(--accent); }
+.patient-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+.patient-info { flex: 1; }
+.patient-name { font-weight: 600; font-size: 15px; }
+.patient-meta { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+.patient-last-pef {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pef);
+}
+.patient-item-delete {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 18px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 60px 20px;
+  font-size: 14px;
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+/* ── Formular ────────────────────────────────────────────────── */
+.form-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-group label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.field-group input,
+.field-group select,
+.field-group textarea {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+}
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus { border-color: var(--accent); }
+.field-group textarea { resize: none; }
+.field-row { display: flex; gap: 12px; }
+.field-row .field-group { flex: 1; }
+
+/* ── Tab-uri ─────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab-content { display: none; flex: 1; overflow-y: auto; }
+.tab-content.active { display: flex; flex-direction: column; }
+
+/* ── Info pacient ────────────────────────────────────────────── */
+.patient-info-bar {
+  padding: 10px 16px;
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ── Zona masurare ───────────────────────────────────────────── */
+.measure-zone {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+/* Canvas semnal timp real */
+#realtime-canvas {
+  width: 100%;
+  max-width: 380px;
+  height: 110px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* Carduri metrici */
+.metrics-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 380px;
+}
+.metric-card {
+  flex: 1;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.metric-card.pef-card.active { border-color: var(--pef); }
+.metric-card.fev1-card.active { border-color: var(--fev1); }
+.metric-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.metric-value {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.pef-card .metric-value { color: var(--pef); }
+.fev1-card .metric-value { color: var(--fev1); }
+.metric-unit {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.metric-pct {
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 6px;
+  min-height: 18px;
+}
+
+/* Zona GINA */
+.gina-zone {
+  width: 100%;
+  max-width: 380px;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+.gina-green  { background: rgba(0,230,118,0.12); color: var(--green);  border: 1px solid rgba(0,230,118,0.3);  }
+.gina-yellow { background: rgba(255,204,0,0.12); color: var(--yellow); border: 1px solid rgba(255,204,0,0.3);  }
+.gina-red    { background: rgba(255,68,68,0.12); color: var(--red);    border: 1px solid rgba(255,68,68,0.3);  }
+
+/* Butoane masurare */
+.btn-measure {
+  width: 100%;
+  max-width: 380px;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--green);
+  background: rgba(0,230,118,0.08);
+  color: var(--green);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-measure.measuring {
+  border-color: var(--red);
+  background: rgba(255,68,68,0.08);
+  color: var(--red);
+}
+.btn-save-result {
+  width: 100%;
+  max-width: 380px;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--accent);
+  background: rgba(68,136,255,0.08);
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Istoric ─────────────────────────────────────────────────── */
+.history-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.history-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.history-data { flex: 1; }
+.history-values { font-size: 15px; font-weight: 600; }
+.history-values .pef-val { color: var(--pef); }
+.history-values .fev1-val { color: var(--fev1); margin-left: 12px; }
+.history-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.history-delete {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* ── Grafic evolutie ─────────────────────────────────────────── */
+.chart-controls {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px 0;
+  flex-shrink: 0;
+}
+.chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+.chip.active { border-color: var(--accent); color: var(--accent); background: rgba(68,136,255,0.1); }
+
+#history-canvas {
+  width: calc(100% - 32px);
+  margin: 12px 16px;
+  height: 200px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.chart-stats {
+  padding: 0 16px 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.stat-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  flex: 1;
+  min-width: 80px;
+  text-align: center;
+}
+.stat-box .stat-val { font-size: 20px; font-weight: 700; }
+.stat-box .stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── Butoane comune ──────────────────────────────────────────── */
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-back, .btn-icon {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.btn-save {
+  background: none;
+  border: none;
+  color: var(--green);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Modal ───────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 280px;
+  text-align: center;
+}
+.modal p { font-size: 15px; margin-bottom: 20px; line-height: 1.5; }
+.modal-buttons { display: flex; gap: 10px; }
+.btn-cancel {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+.btn-delete {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--red);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Utilitare ───────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* Scrollbar subtil */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Hint masurare ───────────────────────────────────────────── */
+.measure-hint {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  padding: 10px;
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px dashed rgba(0,230,118,0.3);
+  border-radius: var(--radius-sm);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ── Buton calibrare ─────────────────────────────────────────── */
+.btn-calibrate {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ── Grila parametri ─────────────────────────────────────────── */
+.params-section-label {
+  width: 100%; max-width: 380px;
+  font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 4px; margin-top: 8px;
+}
+.params-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 6px; width: 100%; max-width: 380px;
+}
+.param-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 8px 4px;
+  text-align: center;
+}
+.param-card.expir  { border-top: 2px solid var(--pef); }
+.param-card.inspir { border-top: 2px solid #00e676; }
+.param-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 2px; }
+.param-value { font-size: 18px; font-weight: 800; line-height: 1.1; color: var(--text); }
+.param-unit  { font-size: 9px; color: var(--text-dim); margin-top: 1px; }
+.pef-color    { color: var(--pef) !important; }
+.fev1-color   { color: var(--fev1) !important; }
+.inspir-color { color: #00e676 !important; }
+
+/* ── Instructiune manevra ────────────────────────────────────── */
+.manevra-hint {
+  width: 100%; max-width: 380px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 8px 12px;
+  font-size: 12px; color: var(--text-muted); text-align: center;
+  margin-top: 4px;
+}
+.manevra-hint b { color: var(--text); }
+
+/* ── Btn calibrate ───────────────────────────────────────────── */
+.btn-calibrate {
+  background: none; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 7px 16px;
+  color: var(--text-muted); font-size: 12px; cursor: pointer;
+  margin-top: -4px;
+}

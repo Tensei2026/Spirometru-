@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="theme-color" content="#0a0a14"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <title>Spirometru</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══════════════ ECRAN: PACIENȚI ══════════════ -->
+<div id="screen-patients" class="screen active">
+  <header>
+    <h1>Spirometru</h1>
+    <button id="btn-connect" class="btn-connect" onclick="App.connectBle()">
+      <span id="connect-icon">⬤</span>
+      <span id="connect-label">Conectează</span>
+    </button>
+  </header>
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Caută pacient…" oninput="App.searchPatients(this.value)"/>
+    <button class="btn-primary" onclick="App.showNewPatient()">+ Pacient nou</button>
+  </div>
+  <div id="patient-list" class="patient-list"></div>
+</div>
+
+<!-- ══════════════ ECRAN: FORMULAR PACIENT ══════════════ -->
+<div id="screen-patient-form" class="screen">
+  <header>
+    <button class="btn-back" onclick="App.showPatients()">← Înapoi</button>
+    <h1 id="form-title">Pacient nou</h1>
+    <button class="btn-save" onclick="App.savePatient()">Salvează</button>
+  </header>
+  <div class="form-body">
+    <input type="hidden" id="field-id"/>
+    <div class="field-group"><label>Nume și prenume</label><input type="text" id="field-name" placeholder="Ex: Ionescu Maria"/></div>
+    <div class="field-row">
+      <div class="field-group"><label>Vârstă (ani)</label><input type="number" id="field-age" min="5" max="120" placeholder="35"/></div>
+      <div class="field-group"><label>Sex</label><select id="field-sex"><option value="M">Masculin</option><option value="F">Feminin</option></select></div>
+    </div>
+    <div class="field-row">
+      <div class="field-group"><label>Înălțime (cm)</label><input type="number" id="field-height" min="100" max="220" placeholder="170"/></div>
+      <div class="field-group"><label>Greutate (kg)</label><input type="number" id="field-weight" min="20" max="200" placeholder="70"/></div>
+    </div>
+    <div class="field-group"><label>Diagnostic / observații</label><textarea id="field-notes" rows="3" placeholder="Astm, BPOC, etc."></textarea></div>
+  </div>
+</div>
+
+<!-- ══════════════ ECRAN: DOSAR PACIENT ══════════════ -->
+<div id="screen-patient-detail" class="screen">
+  <header>
+    <button class="btn-back" onclick="App.showPatients()">← Înapoi</button>
+    <h1 id="detail-name">---</h1>
+    <button class="btn-icon" onclick="App.editCurrentPatient()">✎</button>
+  </header>
+  <div class="patient-info-bar" id="detail-info"></div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="App.showTab('tab-measure')">Măsurătoare</button>
+    <button class="tab" onclick="App.showTab('tab-history')">Istoric</button>
+    <button class="tab" onclick="App.showTab('tab-chart')">Grafic</button>
+  </div>
+
+  <!-- Tab: Masurare -->
+  <div id="tab-measure" class="tab-content active">
+    <div class="measure-zone">
+
+      <!-- Canvas-uri semnal -->
+      <canvas id="realtime-canvas" width="340" height="90"></canvas>
+      <canvas id="measure-canvas" width="340" height="90" class="hidden"></canvas>
+
+      <!-- Grila parametri: EXPIRATORI -->
+      <div class="params-section-label">Expiratori</div>
+      <div class="params-grid">
+        <div class="param-card expir">
+          <div class="param-label">PEF</div>
+          <div class="param-value pef-color" id="live-pef">---</div>
+          <div class="param-unit">L/min</div>
+        </div>
+        <div class="param-card expir">
+          <div class="param-label">FEV1</div>
+          <div class="param-value fev1-color" id="live-fev1">---</div>
+          <div class="param-unit">L</div>
+        </div>
+        <div class="param-card expir">
+          <div class="param-label">FVC</div>
+          <div class="param-value" id="live-fvc">---</div>
+          <div class="param-unit">L</div>
+        </div>
+        <div class="param-card expir">
+          <div class="param-label">IT</div>
+          <div class="param-value" id="live-it">---</div>
+          <div class="param-unit">%</div>
+        </div>
+      </div>
+
+      <!-- Grila parametri: INSPIRATORI -->
+      <div class="params-section-label">Inspiratori</div>
+      <div class="params-grid">
+        <div class="param-card inspir">
+          <div class="param-label">PIF</div>
+          <div class="param-value inspir-color" id="live-pif">---</div>
+          <div class="param-unit">L/min</div>
+        </div>
+        <div class="param-card inspir">
+          <div class="param-label">FIV1</div>
+          <div class="param-value inspir-color" id="live-fiv1">---</div>
+          <div class="param-unit">L</div>
+        </div>
+        <div class="param-card inspir">
+          <div class="param-label">VIR</div>
+          <div class="param-value inspir-color" id="live-vir">---</div>
+          <div class="param-unit">L</div>
+        </div>
+        <div class="param-card inspir">
+          <div class="param-label">FEVt</div>
+          <div class="param-value" id="live-fevt">---</div>
+          <div class="param-unit">L</div>
+        </div>
+      </div>
+
+      <!-- Zone interpretare -->
+      <div id="gina-zone"  class="gina-zone hidden"></div>
+      <div id="tiff-zone"  class="gina-zone hidden"></div>
+
+      <!-- Butoane -->
+      <button id="btn-measure" class="btn-measure" onclick="App.toggleMeasure()">▶ Start măsurătoare</button>
+      <button id="btn-save-result" class="btn-save-result hidden" onclick="App.saveResult()">💾 Salvează rezultatul</button>
+      <button class="btn-calibrate" onclick="App.calibrate()">⟳ Recalibrare</button>
+
+      <!-- Instructiune manevra -->
+      <div class="manevra-hint">
+        <b>Manevra FVC:</b> inspiră maxim → expiră forțat → inspiră forțat înapoi
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Istoric -->
+  <div id="tab-history" class="tab-content">
+    <div id="history-list" class="history-list"></div>
+  </div>
+
+  <!-- Tab: Grafic -->
+  <div id="tab-chart" class="tab-content">
+    <div class="chart-controls">
+      <button class="chip active" onclick="App.setChartMetric('pef',this)">PEF</button>
+      <button class="chip" onclick="App.setChartMetric('fev1',this)">FEV1</button>
+      <button class="chip" onclick="App.setChartMetric('fvc',this)">FVC</button>
+      <button class="chip" onclick="App.setChartMetric('it',this)">IT%</button>
+    </div>
+    <canvas id="history-canvas" width="340" height="200"></canvas>
+    <div id="chart-stats" class="chart-stats"></div>
+  </div>
+</div>
+
+<!-- Modal stergere -->
+<div id="modal-overlay" class="modal-overlay hidden">
+  <div class="modal">
+    <p id="modal-text"></p>
+    <div class="modal-buttons">
+      <button class="btn-cancel" onclick="App.closeModal()">Anulează</button>
+      <button class="btn-delete" id="modal-confirm">Șterge</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
